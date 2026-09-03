@@ -51,6 +51,12 @@ struct PhotoCreditsView: View {
                     author: "Jose Mario Pires",
                     license: "CC BY-SA 4.0"
                 )
+                
+                creditRow(
+                    place: "Turnul Sfatului",
+                    author: "Paul Colin Hennig",
+                    license: "CC BY-SA 4.0"
+                )
             }
         }
         .navigationTitle("Photo Credits")

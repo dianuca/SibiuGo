@@ -12,7 +12,7 @@ struct ExploreView: View {
     private let places = PlaceService.places
 
     @State private var selectedPlaceID: String?
-    @State private var locationService = LocationService()
+    @Environment(LocationService.self) private var locationService
     @State private var position: MapCameraPosition = .region(
         MKCoordinateRegion(
             center: CLLocationCoordinate2D(
@@ -82,4 +82,6 @@ struct ExploreView: View {
 
 #Preview {
     ExploreView()
+        .environment(LocationService())
+        .environment(FavoritesStore())
 }

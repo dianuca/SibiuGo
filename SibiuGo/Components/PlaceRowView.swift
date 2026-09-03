@@ -1,14 +1,32 @@
-//
-//  PlaceRowView.swift
-//  SibiuGo
-//
-//  Created by Diana Ciodolan on 03/09/2026.
-//
-
 import SwiftUI
+import CoreLocation
 
 struct PlaceRowView: View {
     let place: Place
+    let distance: CLLocationDistance?
+
+    init(
+        place: Place,
+        distance: CLLocationDistance? = nil
+    ) {
+        self.place = place
+        self.distance = distance
+    }
+
+    private var distanceText: String? {
+        guard let distance else {
+            return nil
+        }
+
+        if distance < 1000 {
+            return "\(Int(distance)) m"
+        }
+
+        return String(
+            format: "%.1f km",
+            distance / 1000
+        )
+    }
 
     var body: some View {
         HStack(spacing: 16) {
@@ -28,7 +46,7 @@ struct PlaceRowView: View {
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
 
-                HStack(spacing: 4) {
+                HStack(spacing: 5) {
                     Image(systemName: "star.fill")
 
                     Text(
@@ -37,6 +55,12 @@ struct PlaceRowView: View {
                             place.rating
                         )
                     )
+
+                    if let distanceText {
+                        Text("•")
+
+                        Text(distanceText)
+                    }
                 }
                 .font(.caption)
             }
@@ -49,11 +73,4 @@ struct PlaceRowView: View {
         }
         .padding(.vertical, 6)
     }
-}
-
-#Preview {
-    PlaceRowView(
-        place: PlaceService.places[0]
-    )
-    .padding()
 }

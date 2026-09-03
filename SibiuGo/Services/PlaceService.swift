@@ -10,7 +10,7 @@ import Foundation
 struct PlaceService {
     static let places: [Place] = [
         Place(
-            id: UUID(),
+            id: "piata-mare",
             name: "Piața Mare",
             description: "Piața centrală a Sibiului și unul dintre cele mai cunoscute locuri din oraș.",
             category: .attraction,
@@ -23,7 +23,7 @@ struct PlaceService {
         ),
 
         Place(
-            id: UUID(),
+            id: "podul-minciunilor",
             name: "Podul Minciunilor",
             description: "Unul dintre simbolurile Sibiului, situat între Piața Mică și Piața Huet.",
             category: .attraction,
@@ -36,7 +36,7 @@ struct PlaceService {
         ),
 
         Place(
-            id: UUID(),
+            id: "muzeul-astra",
             name: "Muzeul ASTRA",
             description: "Muzeu în aer liber dedicat civilizației tradiționale din România.",
             category: .museum,
@@ -49,7 +49,7 @@ struct PlaceService {
         ),
 
         Place(
-            id: UUID(),
+            id: "parcul-sub-arini",
             name: "Parcul Sub Arini",
             description: "Unul dintre cele mai cunoscute parcuri din Sibiu.",
             category: .park,

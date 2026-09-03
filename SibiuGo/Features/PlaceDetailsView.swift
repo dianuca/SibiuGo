@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import MapKit
 
 struct PlaceDetailsView: View {
     let place: Place
@@ -60,6 +61,16 @@ struct PlaceDetailsView: View {
                         place.address,
                         systemImage: "mappin.and.ellipse"
                     )
+                    Button {
+                        openInMaps()
+                    } label: {
+                        Label(
+                            "Deschide în Maps",
+                            systemImage: "map.fill"
+                        )
+                        .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.borderedProminent)
                 }
                 .padding()
             }
@@ -78,6 +89,24 @@ struct PlaceDetailsView: View {
                 }
             }
         }
+    }
+    private func openInMaps() {
+        let coordinate = CLLocationCoordinate2D(
+            latitude: place.latitude,
+            longitude: place.longitude
+        )
+
+        let mapItem = MKMapItem(
+            location: CLLocation(
+                latitude: coordinate.latitude,
+                longitude: coordinate.longitude
+            ),
+            address: nil
+        )
+
+        mapItem.name = place.name
+
+        mapItem.openInMaps()
     }
 }
 

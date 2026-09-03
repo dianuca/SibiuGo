@@ -12,6 +12,7 @@ struct ExploreView: View {
     private let places = PlaceService.places
     
     @State private var selectedCategory: PlaceCategory?
+    @State private var searchText = ""
     @State private var selectedPlaceID: String?
     @Environment(LocationService.self) private var locationService
     @State private var position: MapCameraPosition = .region(
@@ -30,15 +31,30 @@ struct ExploreView: View {
     private var selectedPlace: Place? {
         places.first { $0.id == selectedPlaceID }
     }
+    
     private var filteredPlaces: [Place] {
-        guard let selectedCategory else {
-            return places
+        var result = places
+
+        if let selectedCategory {
+            result = result.filter {
+                $0.category == selectedCategory
+            }
         }
 
-        return places.filter {
-            $0.category == selectedCategory
+        let trimmedSearchText = searchText
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+
+        if !trimmedSearchText.isEmpty {
+            result = result.filter { place in
+                place.name.localizedCaseInsensitiveContains(trimmedSearchText)
+                || place.address.localizedCaseInsensitiveContains(trimmedSearchText)
+                || place.category.title.localizedCaseInsensitiveContains(trimmedSearchText)
+            }
         }
+
+        return result
     }
+    
     private var availableCategories: [PlaceCategory] {
         PlaceCategory.allCases.filter { category in
             places.contains {
@@ -206,6 +222,13 @@ struct ExploreView: View {
             }
             .navigationTitle("Explorează")
             .navigationBarTitleDisplayMode(.inline)
+            .searchable(
+                text: $searchText,
+                prompt: "Caută un loc în Sibiu"
+            )
+            .onChange(of: searchText) {
+                selectedPlaceID = nil
+            }
             .safeAreaInset(edge: .top) {
                 categoryFilters
             }

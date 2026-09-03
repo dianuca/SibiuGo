@@ -52,13 +52,18 @@ struct HomeView: View {
     }
 
     private var featuredSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("Recomandate")
-                .font(.title2)
-                .fontWeight(.semibold)
+        VStack(alignment: .leading, spacing: 14) {
+
+            HStack {
+                Text("Recomandate")
+                    .font(.title2)
+                    .fontWeight(.bold)
+
+                Spacer()
+            }
 
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 16) {
+                HStack(spacing: 14) {
                     ForEach(filteredPlaces) { place in
                         NavigationLink {
                             PlaceDetailsView(place: place)
@@ -71,13 +76,14 @@ struct HomeView: View {
                         .buttonStyle(.plain)
                     }
                 }
+                .scrollTargetLayout()
             }
+            .scrollTargetBehavior(.viewAligned)
         }
     }
     
     private var filteredPlaces: [Place] {
         var result: [Place]
-
         if let selectedCategory {
             result = places.filter {
                 $0.category == selectedCategory
@@ -87,13 +93,15 @@ struct HomeView: View {
                 $0.isFeatured
             }
         }
-
-        if !searchText.isEmpty {
-            result = places.filter {
-                $0.name.localizedCaseInsensitiveContains(searchText)
+        let trimmedSearchText = searchText
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        if !trimmedSearchText.isEmpty {
+            result = result.filter { place in
+                place.name.localizedCaseInsensitiveContains(trimmedSearchText)
+                || place.address.localizedCaseInsensitiveContains(trimmedSearchText)
+                || place.category.title.localizedCaseInsensitiveContains(trimmedSearchText)
             }
         }
-
         return result
     }
     

@@ -12,7 +12,7 @@ struct ExploreView: View {
     private let places = PlaceService.places
 
     @State private var selectedPlaceID: String?
-
+    @State private var locationService = LocationService()
     @State private var position: MapCameraPosition = .region(
         MKCoordinateRegion(
             center: CLLocationCoordinate2D(
@@ -35,6 +35,7 @@ struct ExploreView: View {
                 position: $position,
                 selection: $selectedPlaceID
             ) {
+                UserAnnotation()
                 ForEach(places) { place in
                     Marker(
                         place.name,
@@ -45,6 +46,13 @@ struct ExploreView: View {
                     )
                     .tag(place.id)
                 }
+            }
+            .mapControls {
+                MapUserLocationButton()
+                MapCompass()
+            }
+            .onAppear {
+                locationService.requestPermission()
             }
             .navigationTitle("Explorează")
             .navigationBarTitleDisplayMode(.inline)

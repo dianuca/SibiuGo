@@ -30,13 +30,11 @@ struct PlaceRowView: View {
 
     var body: some View {
         HStack(spacing: 16) {
-            Image(place.imageName)
-                .resizable()
-                .scaledToFill()
-                .frame(width: 75, height: 75)
-                .clipShape(
-                    RoundedRectangle(cornerRadius: 14)
-                )
+            PlaceImageView(
+                place: place,
+                width: 75,
+                height: 75
+            )
 
             VStack(alignment: .leading, spacing: 5) {
                 Text(place.name)
@@ -49,12 +47,18 @@ struct PlaceRowView: View {
                 HStack(spacing: 5) {
                     Image(systemName: "star.fill")
 
-                    Text(
-                        String(
-                            format: "%.1f",
-                            place.rating
-                        )
-                    )
+                    if let rating = place.rating {
+                        HStack(spacing: 5) {
+                            Image(systemName: "star.fill")
+
+                            Text(
+                                String(
+                                    format: "%.1f",
+                                    rating
+                                )
+                            )
+                        }
+                    }
 
                     if let distanceText {
                         Text("•")

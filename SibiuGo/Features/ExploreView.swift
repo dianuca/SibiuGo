@@ -9,8 +9,11 @@ import SwiftUI
 import MapKit
 
 struct ExploreView: View {
-    private let places = PlaceService.places
-    
+    private let localPlaces = PlaceService.places
+    @State private var mapKitPlaces: [Place] = []
+    private var places: [Place] {
+        localPlaces + mapKitPlaces
+    }
     @State private var selectedCategory: PlaceCategory?
     @State private var searchText = ""
     @State private var selectedPlaceID: String?
@@ -30,6 +33,21 @@ struct ExploreView: View {
 
     private var selectedPlace: Place? {
         places.first { $0.id == selectedPlaceID }
+    }
+    
+    private func loadMapKitPlaces() async {
+        guard mapKitPlaces.isEmpty else {
+            return
+        }
+
+        do {
+            mapKitPlaces = try await MapKitPlaceService
+                .fetchFoodPlaces()
+        } catch {
+            print(
+                "MapKit places error: \(error.localizedDescription)"
+            )
+        }
     }
     
     private var filteredPlaces: [Place] {
@@ -136,13 +154,11 @@ struct ExploreView: View {
     }
     private func selectedPlaceCard(_ place: Place) -> some View {
         HStack(spacing: 14) {
-            Image(place.imageName)
-                .resizable()
-                .scaledToFill()
-                .frame(width: 90, height: 90)
-                .clipShape(
-                    RoundedRectangle(cornerRadius: 14)
-                )
+            PlaceImageView(
+                place: place,
+                width: 90,
+                height: 90
+            )
 
             VStack(alignment: .leading, spacing: 6) {
                 Text(place.name)
@@ -153,21 +169,23 @@ struct ExploreView: View {
                     .foregroundStyle(.secondary)
 
                 HStack(spacing: 5) {
-                    Image(systemName: "star.fill")
-
-                    Text(
-                        String(
-                            format: "%.1f",
-                            place.rating
+                    if let rating = place.rating {
+                        Image(systemName: "star.fill")
+                        Text(
+                            String(
+                                format: "%.1f",
+                                rating
+                            )
                         )
-                    )
-
+                    }
                     if let distance = locationService.distance(to: place) {
-                        Text("•")
-
+                        if place.rating != nil {
+                            Text("•")
+                        }
                         Text(distanceText(distance))
                     }
                 }
+                .font(.caption)
                 .font(.caption)
 
                 NavigationLink {
@@ -219,6 +237,9 @@ struct ExploreView: View {
             }
             .onAppear {
                 locationService.requestPermission()
+            }
+            .task {
+                await loadMapKitPlaces()
             }
             .navigationTitle("Explorează")
             .navigationBarTitleDisplayMode(.inline)

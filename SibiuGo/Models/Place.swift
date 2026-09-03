@@ -15,8 +15,8 @@ struct Place: Identifiable, Codable {
     let latitude: Double
     let longitude: Double
     let address: String
-    let imageName: String
-    let rating: Double
+    let imageName: String?
+    let rating: Double?
     let isFeatured: Bool
     let status: PlaceStatus?
 }

@@ -45,7 +45,8 @@ struct HomeView: View {
                 .font(.largeTitle)
                 .fontWeight(.bold)
 
-            Text("Locuri, evenimente și experiențe.")
+            Text("Găsește locuri, evenimente și experiențe în oraș.")
+                .font(.subheadline)
                 .foregroundStyle(.secondary)
         }
     }
@@ -56,18 +57,20 @@ struct HomeView: View {
                 .font(.title2)
                 .fontWeight(.semibold)
 
-            ForEach(filteredPlaces) { place in
-                NavigationLink {
-                    PlaceDetailsView(place: place)
-                } label: {
-                    PlaceRowView(
-                        place: place,
-                        distance: locationService.distance(to: place)
-                    )
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 16) {
+                    ForEach(filteredPlaces) { place in
+                        NavigationLink {
+                            PlaceDetailsView(place: place)
+                        } label: {
+                            FeaturedPlaceCard(
+                                place: place,
+                                distance: locationService.distance(to: place)
+                            )
+                        }
+                        .buttonStyle(.plain)
+                    }
                 }
-                .buttonStyle(.plain)
-
-                Divider()
             }
         }
     }

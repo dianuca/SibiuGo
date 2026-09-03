@@ -46,5 +46,53 @@
     "imageName": "sub-arini",
     "rating": 4.7,
     "isFeatured": false
+  },
+  {
+    "id": "catedrala-evanghelica",
+    "name": "Catedrala Evanghelică",
+    "description": "Unul dintre cele mai impresionante monumente gotice ale Sibiului, aflat în Piața Huet.",
+    "category": "attraction",
+    "latitude": 45.79777,
+    "longitude": 24.15008,
+    "address": "Piața Huet, Sibiu",
+    "imageName": "catedrala-evanghelica",
+    "rating": 4.8,
+    "isFeatured": true
+  },
+  {
+    "id": "palatul-brukenthal",
+    "name": "Palatul Brukenthal",
+    "description": "Palatul baroc din Piața Mare găzduiește una dintre cele mai importante colecții ale Muzeului Național Brukenthal.",
+    "category": "museum",
+    "latitude": 45.79654,
+    "longitude": 24.15127,
+    "address": "Piața Mare 4-5, Sibiu",
+    "imageName": "palatul-brukenthal",
+    "rating": 4.8,
+    "isFeatured": true
+  },
+  {
+    "id": "pasajul-scarilor",
+    "name": "Pasajul Scărilor",
+    "description": "Un pasaj medieval pitoresc care face legătura între Orașul de Sus și Orașul de Jos.",
+    "category": "attraction",
+    "latitude": 45.79877,
+    "longitude": 24.15155,
+    "address": "Pasajul Scărilor, Sibiu",
+    "imageName": "pasajul-scarilor",
+    "rating": 4.7,
+    "isFeatured": false
+  },
+  {
+    "id": "catedrala-mitropolitana",
+    "name": "Catedrala Mitropolitană",
+    "description": "Catedrala Ortodoxă Sfânta Treime, unul dintre cele mai importante edificii religioase din centrul Sibiului.",
+    "category": "attraction",
+    "latitude": 45.79457,
+    "longitude": 24.14811,
+    "address": "Strada Mitropoliei 33-35, Sibiu",
+    "imageName": "catedrala-mitropolitana",
+    "rating": 4.8,
+    "isFeatured": false
   }
 ]

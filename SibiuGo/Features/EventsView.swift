@@ -12,10 +12,12 @@ struct EventsView: View {
     var body: some View {
         NavigationStack {
             List(sortedEvents) { event in
-                EventRowView(event: event)
+                NavigationLink {
+                    EventDetailsView(event: event)
+                } label: {
+                    EventRowView(event: event)
+                }
             }
-            .listStyle(.plain)
-            .navigationTitle("Evenimente")
         }
     }
 }

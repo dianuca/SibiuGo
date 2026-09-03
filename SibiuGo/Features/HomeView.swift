@@ -11,6 +11,8 @@ struct HomeView: View {
     private let places = PlaceService.places
     @State private var selectedCategory: PlaceCategory?
     @State private var searchText = ""
+    @Environment(LocationService.self) private var locationService
+    
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -27,6 +29,9 @@ struct HomeView: View {
             text: $searchText,
             prompt: "Caută locuri în Sibiu"
         )
+        .onAppear {
+            locationService.requestLocation()
+        }
     }
 
     private var headerSection: some View {
@@ -50,7 +55,10 @@ struct HomeView: View {
                 NavigationLink {
                     PlaceDetailsView(place: place)
                 } label: {
-                    PlaceRowView(place: place)
+                    PlaceRowView(
+                        place: place,
+                        distance: locationService.distance(to: place)
+                    )
                 }
                 .buttonStyle(.plain)
 
@@ -112,4 +120,6 @@ struct HomeView: View {
 
 #Preview {
     HomeView()
+        .environment(LocationService())
+        .environment(FavoritesStore())
 }

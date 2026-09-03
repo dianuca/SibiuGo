@@ -24,4 +24,6 @@ struct RootView: View {
 
 #Preview {
     RootView()
+        .environment(FavoritesStore())
+        .environment(LocationService())
 }

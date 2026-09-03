@@ -9,13 +9,13 @@ import SwiftUI
 
 struct HomeView: View {
     private let places = PlaceService.places
-
+    @State private var selectedCategory: PlaceCategory?
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
                     headerSection
-
+                    categoriesSection
                     featuredSection
                 }
                 .padding()
@@ -41,9 +41,7 @@ struct HomeView: View {
                 .font(.title2)
                 .fontWeight(.semibold)
 
-            ForEach(
-                places.filter { $0.isFeatured }
-            ) { place in
+            ForEach(filteredPlaces) { place in
                 NavigationLink {
                     PlaceDetailsView(place: place)
                 } label: {
@@ -52,6 +50,46 @@ struct HomeView: View {
                 .buttonStyle(.plain)
 
                 Divider()
+            }
+        }
+    }
+    
+    private var filteredPlaces: [Place] {
+        if let selectedCategory {
+            return places.filter {
+                $0.category == selectedCategory
+            }
+        }
+
+        return places.filter {
+            $0.isFeatured
+        }
+    }
+    
+    private var categoriesSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Categorii")
+                .font(.title2)
+                .fontWeight(.semibold)
+
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 16) {
+                    ForEach(PlaceCategory.allCases) { category in
+                        Button {
+                            if selectedCategory == category {
+                                selectedCategory = nil
+                            } else {
+                                selectedCategory = category
+                            }
+                        } label: {
+                            CategoryButton(
+                                category: category,
+                                isSelected: selectedCategory == category
+                            )
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
             }
         }
     }

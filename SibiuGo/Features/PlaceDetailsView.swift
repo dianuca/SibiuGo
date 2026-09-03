@@ -15,11 +15,12 @@ struct PlaceDetailsView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-                Image(systemName: place.category.icon)
-                    .font(.system(size: 60))
+                Image(place.imageName)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(height: 260)
                     .frame(maxWidth: .infinity)
-                    .padding(.vertical, 40)
-                    .background(.thinMaterial)
+                    .clipped()
 
                 VStack(alignment: .leading, spacing: 16) {
                     Text(place.name)

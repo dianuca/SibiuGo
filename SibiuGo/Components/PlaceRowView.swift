@@ -30,10 +30,10 @@ struct PlaceRowView: View {
 
     var body: some View {
         HStack(spacing: 16) {
-            Image(systemName: place.category.icon)
-                .font(.title2)
-                .frame(width: 55, height: 55)
-                .background(.thinMaterial)
+            Image(place.imageName)
+                .resizable()
+                .scaledToFill()
+                .frame(width: 75, height: 75)
                 .clipShape(
                     RoundedRectangle(cornerRadius: 14)
                 )

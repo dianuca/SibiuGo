@@ -10,6 +10,7 @@ import SwiftUI
 struct HomeView: View {
     private let places = PlaceService.places
     @State private var selectedCategory: PlaceCategory?
+    @State private var searchText = ""
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -22,6 +23,10 @@ struct HomeView: View {
             }
             .navigationTitle("SibiuGo")
         }
+        .searchable(
+            text: $searchText,
+            prompt: "Caută locuri în Sibiu"
+        )
     }
 
     private var headerSection: some View {
@@ -55,15 +60,25 @@ struct HomeView: View {
     }
     
     private var filteredPlaces: [Place] {
+        var result: [Place]
+
         if let selectedCategory {
-            return places.filter {
+            result = places.filter {
                 $0.category == selectedCategory
+            }
+        } else {
+            result = places.filter {
+                $0.isFeatured
             }
         }
 
-        return places.filter {
-            $0.isFeatured
+        if !searchText.isEmpty {
+            result = places.filter {
+                $0.name.localizedCaseInsensitiveContains(searchText)
+            }
         }
+
+        return result
     }
     
     private var categoriesSection: some View {

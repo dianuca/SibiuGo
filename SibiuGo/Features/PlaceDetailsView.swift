@@ -15,12 +15,12 @@ struct PlaceDetailsView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-                Image(place.imageName)
-                    .resizable()
-                    .scaledToFill()
-                    .frame(height: 260)
-                    .frame(maxWidth: .infinity)
-                    .clipped()
+                
+                PlaceImageView(
+                    place: place,
+                    height: 260,
+                    cornerRadius: 0
+                )
 
                 VStack(alignment: .leading, spacing: 16) {
                     Text(place.name)
@@ -48,13 +48,17 @@ struct PlaceDetailsView: View {
 
                     HStack(spacing: 5) {
                         Image(systemName: "star.fill")
-
-                        Text(
-                            String(
-                                format: "%.1f",
-                                place.rating
-                            )
-                        )
+                        if let rating = place.rating {
+                            HStack(spacing: 5) {
+                                Image(systemName: "star.fill")
+                                Text(
+                                    String(
+                                        format: "%.1f",
+                                        rating
+                                    )
+                                )
+                            }
+                        }
                     }
 
                     Divider()

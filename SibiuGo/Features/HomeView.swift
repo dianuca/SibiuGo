@@ -44,7 +44,12 @@ struct HomeView: View {
             ForEach(
                 places.filter { $0.isFeatured }
             ) { place in
-                PlaceRowView(place: place)
+                NavigationLink {
+                    PlaceDetailsView(place: place)
+                } label: {
+                    PlaceRowView(place: place)
+                }
+                .buttonStyle(.plain)
 
                 Divider()
             }

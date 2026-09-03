@@ -45,7 +45,8 @@ struct HomeView: View {
                 .font(.largeTitle)
                 .fontWeight(.bold)
 
-            Text("Locuri, evenimente și experiențe.")
+            Text("Găsește locuri, evenimente și experiențe în oraș.")
+                .font(.subheadline)
                 .foregroundStyle(.secondary)
         }
     }

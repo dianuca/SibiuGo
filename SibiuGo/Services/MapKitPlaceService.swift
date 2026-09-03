@@ -8,15 +8,31 @@ struct MapKitPlaceService {
         longitude: 24.1517
     )
 
-    static func fetchFoodPlaces() async throws -> [Place] {
+    static func fetchPlaces(
+        for category: PlaceCategory
+    ) async throws -> [Place] {
+
+        let mapKitCategory: MKPointOfInterestCategory
+
+        switch category {
+        case .restaurant:
+            mapKitCategory = .restaurant
+
+        case .cafe:
+            mapKitCategory = .cafe
+
+        default:
+            return []
+        }
+
         let request = MKLocalPointsOfInterestRequest(
             center: sibiuCenter,
             radius: 4_000
         )
+
         request.pointOfInterestFilter = MKPointOfInterestFilter(
             including: [
-                .restaurant,
-                .cafe
+                mapKitCategory
             ]
         )
 

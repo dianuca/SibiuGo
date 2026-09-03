@@ -10,7 +10,11 @@ import MapKit
 
 struct ExploreView: View {
     private let localPlaces = PlaceService.places
+    
     @State private var mapKitPlaces: [Place] = []
+    @State private var loadedMapKitCategories: Set<PlaceCategory> = []
+    @State private var isLoadingMapKitPlaces = false
+    
     private var places: [Place] {
         localPlaces + mapKitPlaces
     }
@@ -35,14 +39,32 @@ struct ExploreView: View {
         places.first { $0.id == selectedPlaceID }
     }
     
-    private func loadMapKitPlaces() async {
-        guard mapKitPlaces.isEmpty else {
+    private func loadMapKitPlaces(
+        for category: PlaceCategory
+    ) async {
+        guard category == .restaurant || category == .cafe else {
             return
         }
-
+        guard !loadedMapKitCategories.contains(category) else {
+            return
+        }
+        isLoadingMapKitPlaces = true
+        defer {
+            isLoadingMapKitPlaces = false
+        }
         do {
-            mapKitPlaces = try await MapKitPlaceService
-                .fetchFoodPlaces()
+            let newPlaces = try await MapKitPlaceService
+                .fetchPlaces(for: category)
+            let existingIDs = Set(
+                places.map(\.id)
+            )
+            let uniquePlaces = newPlaces.filter {
+                !existingIDs.contains($0.id)
+            }
+            mapKitPlaces.append(
+                contentsOf: uniquePlaces
+            )
+            loadedMapKitCategories.insert(category)
         } catch {
             print(
                 "MapKit places error: \(error.localizedDescription)"
@@ -52,16 +74,13 @@ struct ExploreView: View {
     
     private var filteredPlaces: [Place] {
         var result = places
-
         if let selectedCategory {
             result = result.filter {
                 $0.category == selectedCategory
             }
         }
-
         let trimmedSearchText = searchText
             .trimmingCharacters(in: .whitespacesAndNewlines)
-
         if !trimmedSearchText.isEmpty {
             result = result.filter { place in
                 place.name.localizedCaseInsensitiveContains(trimmedSearchText)
@@ -69,17 +88,20 @@ struct ExploreView: View {
                 || place.category.title.localizedCaseInsensitiveContains(trimmedSearchText)
             }
         }
-
         return result
     }
     
     private var availableCategories: [PlaceCategory] {
         PlaceCategory.allCases.filter { category in
-            places.contains {
+            if category == .restaurant || category == .cafe {
+                return true
+            }
+            return localPlaces.contains {
                 $0.category == category
             }
         }
     }
+    
     private var categoryFilters: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 10) {
@@ -112,6 +134,13 @@ struct ExploreView: View {
                     Button {
                         selectedCategory = category
                         selectedPlaceID = nil
+                        if category == .restaurant || category == .cafe {
+                            Task {
+                                await loadMapKitPlaces(
+                                    for: category
+                                )
+                            }
+                        }
                     } label: {
                         Label(
                             category.title,
@@ -238,9 +267,6 @@ struct ExploreView: View {
             .onAppear {
                 locationService.requestPermission()
             }
-            .task {
-                await loadMapKitPlaces()
-            }
             .navigationTitle("Explorează")
             .navigationBarTitleDisplayMode(.inline)
             .searchable(
@@ -254,9 +280,18 @@ struct ExploreView: View {
                 categoryFilters
             }
             .safeAreaInset(edge: .bottom) {
-                if let selectedPlace {
-                    selectedPlaceCard(selectedPlace)
-                        .padding()
+                VStack {
+                    if isLoadingMapKitPlaces {
+                        ProgressView("Se încarcă locurile...")
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 10)
+                            .background(.regularMaterial)
+                            .clipShape(Capsule())
+                    }
+                    if let selectedPlace {
+                        selectedPlaceCard(selectedPlace)
+                            .padding()
+                    }
                 }
             }
         }

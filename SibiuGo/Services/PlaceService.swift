@@ -1,64 +1,27 @@
-//
-//  PlaceService.swift
-//  SibiuGo
-//
-//  Created by Diana Ciodolan on 03/09/2026.
-//
-
 import Foundation
 
 struct PlaceService {
-    static let places: [Place] = [
-        Place(
-            id: "piata-mare",
-            name: "Piața Mare",
-            description: "Piața centrală a Sibiului și unul dintre cele mai cunoscute locuri din oraș.",
-            category: .attraction,
-            latitude: 45.7966,
-            longitude: 24.1517,
-            address: "Piața Mare, Sibiu",
-            imageName: "piata-mare",
-            rating: 4.8,
-            isFeatured: true
-        ),
+    static let places: [Place] = loadPlaces()
 
-        Place(
-            id: "podul-minciunilor",
-            name: "Podul Minciunilor",
-            description: "Unul dintre simbolurile Sibiului, situat între Piața Mică și Piața Huet.",
-            category: .attraction,
-            latitude: 45.7981,
-            longitude: 24.1505,
-            address: "Piața Mică, Sibiu",
-            imageName: "podul-minciunilor",
-            rating: 4.7,
-            isFeatured: true
-        ),
+    private static func loadPlaces() -> [Place] {
+        guard let url = Bundle.main.url(
+            forResource: "places",
+            withExtension: "json"
+        ) else {
+            print("Could not find places.json")
+            return []
+        }
 
-        Place(
-            id: "muzeul-astra",
-            name: "Muzeul ASTRA",
-            description: "Muzeu în aer liber dedicat civilizației tradiționale din România.",
-            category: .museum,
-            latitude: 45.7556,
-            longitude: 24.1168,
-            address: "Strada Pădurea Dumbrava 16-20, Sibiu",
-            imageName: "muzeul-astra",
-            rating: 4.9,
-            isFeatured: true
-        ),
+        do {
+            let data = try Data(contentsOf: url)
 
-        Place(
-            id: "parcul-sub-arini",
-            name: "Parcul Sub Arini",
-            description: "Unul dintre cele mai cunoscute parcuri din Sibiu.",
-            category: .park,
-            latitude: 45.7812,
-            longitude: 24.1377,
-            address: "Bulevardul Victoriei, Sibiu",
-            imageName: "sub-arini",
-            rating: 4.7,
-            isFeatured: false
-        )
-    ]
+            return try JSONDecoder().decode(
+                [Place].self,
+                from: data
+            )
+        } catch {
+            print("Could not load places: \(error)")
+            return []
+        }
+    }
 }

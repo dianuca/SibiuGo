@@ -9,7 +9,8 @@ import SwiftUI
 
 struct PlaceDetailsView: View {
     let place: Place
-
+    @Environment(FavoritesStore.self) private var favoritesStore
+    
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
@@ -64,6 +65,19 @@ struct PlaceDetailsView: View {
             }
         }
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    favoritesStore.toggle(place)
+                } label: {
+                    Image(
+                        systemName: favoritesStore.isFavorite(place)
+                            ? "heart.fill"
+                            : "heart"
+                    )
+                }
+            }
+        }
     }
 }
 
@@ -73,4 +87,5 @@ struct PlaceDetailsView: View {
             place: PlaceService.places[0]
         )
     }
+    .environment(FavoritesStore())
 }

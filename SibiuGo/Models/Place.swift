@@ -8,7 +8,7 @@
 import Foundation
 
 struct Place: Identifiable, Codable {
-    let id: UUID
+    let id: String
     let name: String
     let description: String
     let category: PlaceCategory

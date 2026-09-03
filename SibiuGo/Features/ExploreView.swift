@@ -11,7 +11,7 @@ import MapKit
 struct ExploreView: View {
     private let places = PlaceService.places
 
-    @State private var selectedPlaceID: UUID?
+    @State private var selectedPlaceID: String?
 
     @State private var position: MapCameraPosition = .region(
         MKCoordinateRegion(
@@ -29,7 +29,6 @@ struct ExploreView: View {
     private var selectedPlace: Place? {
         places.first { $0.id == selectedPlaceID }
     }
-
     var body: some View {
         NavigationStack {
             Map(

@@ -27,6 +27,30 @@ struct PhotoCreditsView: View {
                     author: "Wikimedia Commons contributor",
                     license: "CC BY-SA 3.0"
                 )
+                
+                creditRow(
+                    place: "Catedrala Evanghelică",
+                    author: "Superchilum",
+                    license: "CC BY-SA 4.0"
+                )
+
+                creditRow(
+                    place: "Palatul Brukenthal",
+                    author: "Cezar Suceveanu",
+                    license: "CC BY-SA 3.0 RO"
+                )
+
+                creditRow(
+                    place: "Pasajul Scărilor",
+                    author: "Cezar Suceveanu",
+                    license: "CC BY-SA 3.0 RO"
+                )
+
+                creditRow(
+                    place: "Catedrala Mitropolitană",
+                    author: "Jose Mario Pires",
+                    license: "CC BY-SA 4.0"
+                )
             }
         }
         .navigationTitle("Photo Credits")

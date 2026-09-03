@@ -106,6 +106,79 @@ struct ExploreView: View {
         }
         .background(.ultraThinMaterial)
     }
+    private func distanceText(
+        _ distance: CLLocationDistance
+    ) -> String {
+        if distance < 1000 {
+            return "\(Int(distance)) m"
+        }
+
+        return String(
+            format: "%.1f km",
+            distance / 1000
+        )
+    }
+    private func selectedPlaceCard(_ place: Place) -> some View {
+        HStack(spacing: 14) {
+            Image(place.imageName)
+                .resizable()
+                .scaledToFill()
+                .frame(width: 90, height: 90)
+                .clipShape(
+                    RoundedRectangle(cornerRadius: 14)
+                )
+
+            VStack(alignment: .leading, spacing: 6) {
+                Text(place.name)
+                    .font(.headline)
+
+                Text(place.category.title)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+
+                HStack(spacing: 5) {
+                    Image(systemName: "star.fill")
+
+                    Text(
+                        String(
+                            format: "%.1f",
+                            place.rating
+                        )
+                    )
+
+                    if let distance = locationService.distance(to: place) {
+                        Text("•")
+
+                        Text(distanceText(distance))
+                    }
+                }
+                .font(.caption)
+
+                NavigationLink {
+                    PlaceDetailsView(place: place)
+                } label: {
+                    Text("Vezi detalii")
+                        .font(.subheadline)
+                        .fontWeight(.semibold)
+                }
+            }
+
+            Spacer()
+
+            Button {
+                selectedPlaceID = nil
+            } label: {
+                Image(systemName: "xmark.circle.fill")
+                    .font(.title2)
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .padding()
+        .background(.ultraThinMaterial)
+        .clipShape(
+            RoundedRectangle(cornerRadius: 20)
+        )
+    }
     var body: some View {
         NavigationStack {
             Map(
@@ -136,24 +209,10 @@ struct ExploreView: View {
             .safeAreaInset(edge: .top) {
                 categoryFilters
             }
-            .sheet(
-                isPresented: Binding(
-                    get: {
-                        selectedPlace != nil
-                    },
-                    set: { isPresented in
-                        if !isPresented {
-                            selectedPlaceID = nil
-                        }
-                    }
-                )
-            ) {
+            .safeAreaInset(edge: .bottom) {
                 if let selectedPlace {
-                    NavigationStack {
-                        PlaceDetailsView(
-                            place: selectedPlace
-                        )
-                    }
+                    selectedPlaceCard(selectedPlace)
+                        .padding()
                 }
             }
         }

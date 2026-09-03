@@ -12,6 +12,7 @@ struct HomeView: View {
     @State private var selectedCategory: PlaceCategory?
     @State private var searchText = ""
     @Environment(LocationService.self) private var locationService
+    @State private var isNearbyExpanded = false
     
     var body: some View {
         NavigationStack {
@@ -20,6 +21,10 @@ struct HomeView: View {
                     headerSection
                     categoriesSection
                     featuredSection
+
+                    if !nearbyPlaces.isEmpty {
+                        nearbySection
+                    }
                 }
                 .padding()
             }
@@ -87,6 +92,71 @@ struct HomeView: View {
         }
 
         return result
+    }
+    
+    private var nearbyPlaces: [Place] {
+        guard locationService.currentLocation != nil else {
+            return []
+        }
+
+        let sortedPlaces = places.sorted { firstPlace, secondPlace in
+            let firstDistance =
+                locationService.distance(to: firstPlace)
+                ?? .greatestFiniteMagnitude
+
+            let secondDistance =
+                locationService.distance(to: secondPlace)
+                ?? .greatestFiniteMagnitude
+
+            return firstDistance < secondDistance
+        }
+
+        return Array(sortedPlaces.prefix(3))
+    }
+    
+    private var nearbySection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Button {
+                withAnimation {
+                    isNearbyExpanded.toggle()
+                }
+            } label: {
+                HStack {
+                    Image(systemName: "location.fill")
+
+                    Text("În apropiere")
+                        .font(.title2)
+                        .fontWeight(.semibold)
+
+                    Spacer()
+
+                    Image(
+                        systemName: isNearbyExpanded
+                            ? "chevron.up"
+                            : "chevron.down"
+                    )
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                }
+            }
+            .buttonStyle(.plain)
+
+            if isNearbyExpanded {
+                ForEach(nearbyPlaces) { place in
+                    NavigationLink {
+                        PlaceDetailsView(place: place)
+                    } label: {
+                        PlaceRowView(
+                            place: place,
+                            distance: locationService.distance(to: place)
+                        )
+                    }
+                    .buttonStyle(.plain)
+
+                    Divider()
+                }
+            }
+        }
     }
     
     private var categoriesSection: some View {

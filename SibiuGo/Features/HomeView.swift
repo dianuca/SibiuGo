@@ -8,17 +8,46 @@
 import SwiftUI
 
 struct HomeView: View {
+    private let places = PlaceService.places
+
     var body: some View {
         NavigationStack {
-            VStack {
-                Text("Descoperă Sibiul")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
+            ScrollView {
+                VStack(alignment: .leading, spacing: 24) {
+                    headerSection
 
-                Text("Locuri, evenimente și experiențe.")
-                    .foregroundStyle(.secondary)
+                    featuredSection
+                }
+                .padding()
             }
             .navigationTitle("SibiuGo")
+        }
+    }
+
+    private var headerSection: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text("Descoperă Sibiul")
+                .font(.largeTitle)
+                .fontWeight(.bold)
+
+            Text("Locuri, evenimente și experiențe.")
+                .foregroundStyle(.secondary)
+        }
+    }
+
+    private var featuredSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Recomandate")
+                .font(.title2)
+                .fontWeight(.semibold)
+
+            ForEach(
+                places.filter { $0.isFeatured }
+            ) { place in
+                PlaceRowView(place: place)
+
+                Divider()
+            }
         }
     }
 }

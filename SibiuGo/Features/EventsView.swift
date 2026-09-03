@@ -1,17 +1,23 @@
-//
-//  EventsView.swift
-//  SibiuGo
-//
-//  Created by Diana Ciodolan on 03/09/2026.
-//
-
 import SwiftUI
 
 struct EventsView: View {
+    private let events = EventService.events
+
+    private var sortedEvents: [Event] {
+        events.sorted {
+            $0.startDate < $1.startDate
+        }
+    }
+
     var body: some View {
         NavigationStack {
-            Text("Evenimente în Sibiu")
-                .navigationTitle("Evenimente")
+            List(sortedEvents) { event in
+                NavigationLink {
+                    EventDetailsView(event: event)
+                } label: {
+                    EventRowView(event: event)
+                }
+            }
         }
     }
 }

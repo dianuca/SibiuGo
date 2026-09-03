@@ -94,5 +94,18 @@
     "imageName": "catedrala-mitropolitana",
     "rating": 4.8,
     "isFeatured": false
+  },
+  {
+    "id": "turnul-sfatului",
+    "name": "Turnul Sfatului",
+    "description": "Unul dintre simbolurile Sibiului, situat între Piața Mare și Piața Mică. Turnul este momentan închis pentru lucrări de reabilitare.",
+    "category": "attraction",
+    "latitude": 45.79761,
+    "longitude": 24.15213,
+    "address": "Piața Mică 1, Sibiu",
+    "imageName": "turnul-sfatului",
+    "rating": 4.8,
+    "isFeatured": false,
+    "status": "temporarilyClosed"
   }
 ]

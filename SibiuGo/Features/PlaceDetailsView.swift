@@ -32,6 +32,19 @@ struct PlaceDetailsView: View {
                         systemImage: place.category.icon
                     )
                     .foregroundStyle(.secondary)
+                    if let status = place.status {
+                        Label(
+                            status.title,
+                            systemImage: status.icon
+                        )
+                        .font(.subheadline)
+                        .fontWeight(.semibold)
+                        .foregroundStyle(
+                            status == .temporarilyClosed
+                                ? .orange
+                                : .green
+                        )
+                    }
 
                     HStack(spacing: 5) {
                         Image(systemName: "star.fill")

@@ -18,4 +18,5 @@ struct Place: Identifiable, Codable {
     let imageName: String
     let rating: Double
     let isFeatured: Bool
+    let status: PlaceStatus?
 }

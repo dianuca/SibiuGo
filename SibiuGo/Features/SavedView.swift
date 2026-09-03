@@ -33,6 +33,15 @@ struct SavedView: View {
                 }
             }
             .navigationTitle("Salvate")
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    NavigationLink {
+                        PhotoCreditsView()
+                    } label: {
+                        Image(systemName: "info.circle")
+                    }
+                }
+            }
         }
     }
 }
